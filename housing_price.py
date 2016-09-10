@@ -7,8 +7,9 @@ Created on Fri Sep 09 08:02:50 2016
 
 import pandas as pd
 from sklearn.preprocessing import LabelEncoder
+from sklearn.preprocessing import Imputer
 
-data = pd.read_csv('train.csv', na_values = ' ')
+data = pd.read_csv('train.csv', na_values=' ')
 pd.set_option('display.max_columns', 50)
 print data.shape
 print data.dtypes
@@ -21,31 +22,33 @@ for column in data.columns:
 drop_features = ['Alley', 'FireplaceQu', 'PoolQC', 'Fence', 'MiscFeature']
 data = data.drop(drop_features, axis=1)
 
-# Correct object datatype features
-data_temp = data.dropna(how='any')
-data_temp.shape
-
+# Create frequency table for categorical features
+# Drop features with unbalanced data (>75% of data in one category)
 object_cols = []
 for column in data.columns:
-    if data[column].dtypes == 'object':
-        object_cols.append(column)
+    count_frac = data[column].value_counts(
+    ) / data[column].value_counts().sum()
+    for cat, frac in count_frac.iteritems():
+        if frac > 0.75:
+            object_cols.append(column)
 
-lbl = LabelEncoder()
-for column in object_cols:
-    lbl.fit(list(data_temp[column].values))
-    data_temp[column] = lbl.transform(data_temp[column].values)
-
-print data_temp[object_cols].describe()
+print object_cols
 """
-These features have unbalanced data:
-'MSZoning', 'Street', 'LandContour', 'LotConfig', 'LandSlope', 'Condition1', 
-'BldgType', 'RoofMatl', 'ExterCond', 'BsmtCond', 'Heating', 'BsmtFinType1', 
-'CentralAir', 'Electrical', 'Functional', 'GarageQual', 'GarageCond', 'PavedDrive', 
-'SaleType', 'SaleCondition'
+['MSZoning', 'Street', 'LandContour', 'Utilities', 'LandSlope', 'Condition1', 
+'Condition2', 'BldgType', 'RoofStyle', 'RoofMatl', 'ExterCond', 'BsmtCond', 
+'BsmtFinType2', 'BsmtFinSF2', 'Heating', 'CentralAir', 'Electrical', 
+'LowQualFinSF', 'BsmtHalfBath', 'KitchenAbvGr', 'Functional', 'GarageQual', 
+'GarageCond', 'PavedDrive', 'EnclosedPorch', '3SsnPorch', 'ScreenPorch', 
+'PoolArea', 'MiscVal', 'SaleType', 'SaleCondition']
 Drop them for now
 """
-data = data.drop(['MSZoning', 'Street', 'LandContour', 'LotConfig', 'LandSlope',\
-           'Condition1', 'BldgType', 'RoofMatl', 'ExterCond', 'BsmtCond',\
-           'Heating', 'BsmtFinType1', 'CentralAir', 'Electrical', 'Functional',\
-           'GarageQual', 'GarageCond', 'PavedDrive', 'SaleType', 'SaleCondition'],\
-           axis=1)
+data = data.drop(['MSZoning', 'Street', 'LandContour', 'Utilities', 'LandSlope',
+                  'Condition1', 'Condition2', 'BldgType', 'RoofStyle', 'RoofMatl',
+                  'ExterCond', 'BsmtCond', 'BsmtFinType2', 'BsmtFinSF2', 'Heating',
+                  'CentralAir', 'Electrical', 'LowQualFinSF', 'BsmtHalfBath',
+                  'KitchenAbvGr', 'Functional', 'GarageQual', 'GarageCond',
+                  'PavedDrive', 'EnclosedPorch', '3SsnPorch', 'ScreenPorch',
+                  'PoolArea', 'MiscVal', 'SaleType', 'SaleCondition'],
+                 axis=1)
+
+print data.shape    # (1460, 45)
