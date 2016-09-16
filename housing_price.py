@@ -18,7 +18,7 @@ for column in data.columns:
         print column, '\t', data[column].isnull().sum()
 
 drop_features = ['LotFrontage', 'Alley',
-    'FireplaceQu', 'PoolQC', 'Fence', 'MiscFeature']
+                 'FireplaceQu', 'PoolQC', 'Fence', 'MiscFeature']
 data = data.drop(drop_features, axis=1)
 
 # Create frequency table for categorical features
@@ -90,3 +90,19 @@ GarageType      Basment
 GarageYrBlt     1900.0
 GarageFinish    Fin
 """
+
+# Assign dummies to categorical data
+categorical = []
+numerical = []
+for column in data.columns:
+    if data[column].dtypes == 'object':
+        categorical.append(column)
+    else:
+        numerical.append(column)
+
+cat_data = data[categorical]
+cat_data = pd.get_dummies(cat_data)
+num_data = data[numerical]
+data = pd.concat([cat_data, num_data], axis=1)
+
+print len(data.columns)  # 147 features
