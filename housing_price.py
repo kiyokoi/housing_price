@@ -5,12 +5,18 @@ Created on Fri Sep 09 08:02:50 2016
 @author: Kiyoko
 """
 
-import pandas as pd
 
-data = pd.read_csv('train.csv', na_values=' ')
+feature_cols = list(train.columns[:-1])
+label_col = train.columns[-1]
+
+x = train[feature_cols]
+y = train[label_col]
+
+x_all = x.append(test)
+
 pd.set_option('display.max_columns', 50)
-print data.shape
-print data.dtypes
+print x_all.shape
+print x_all.dtypes
 
 # Drop features with > 15% of data missing
 for column in data.columns:
