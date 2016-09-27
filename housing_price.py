@@ -18,13 +18,12 @@ pd.set_option('display.max_columns', 50)
 print x_all.shape
 print x_all.dtypes
 
-# Drop features with > 15% of data missing
+# Drop features with > 40% of data missing
 for column in data.columns:
-    if data[column].isnull().sum() > (data.shape[0] * 0.15):
+    if data[column].isnull().sum() > (data.shape[0] * 0.4):
         print column, '\t', data[column].isnull().sum()
 
-drop_features = ['LotFrontage', 'Alley',
-                 'FireplaceQu', 'PoolQC', 'Fence', 'MiscFeature']
+drop_features = ['Alley', 'FireplaceQu', 'PoolQC', 'Fence', 'MiscFeature']
 data = data.drop(drop_features, axis=1)
 
 # Create frequency table for categorical features
