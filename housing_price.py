@@ -45,43 +45,47 @@ y = np.log1p(y)
 
 print x_all.shape    # (2919, 75)
 
-# Missing value treatment
-# Explore missing values
-for column in data.columns:
-    if data[column].isnull().sum() > 0:
-        print column, '\t', data[column].isnull().sum(), '\t', data[column].dtypes
-
-"""
-MasVnrType      8       object
-MasVnrArea      8       float64
-BsmtQual        37      object
-BsmtExposure    38      object
-BsmtFinType1    37      object
-GarageType      81      object
-GarageYrBlt     81      float64
-GarageFinish    81      object
-"""
 
 # Impute missing values with most frequent
-impute = ['MasVnrType', 'MasVnrArea', 'BsmtQual', 'BsmtExposure', 'BsmtFinType1',
-          'GarageType', 'GarageYrBlt', 'GarageFinish']
+for column in x_all.columns:
+    if x_all[column].isnull().sum() > 0:
+        freq = dict(x_all[column].value_counts())
+        most_freq = freq.keys()[0]
 
-for column in impute:
-    freq = dict(data[column].value_counts())
-    most_freq = freq.keys()[0]
-    print column, '\t', most_freq
+        print column, '\t', x_all[column].isnull().sum(), '\t', x_all[column].dtypes, '\t', most_freq
 
-    data.loc[data[column].isnull(), column] = most_freq
+        x_all.loc[x_all[column].isnull(), column] = most_freq
 
 """
-MasVnrType      None
-MasVnrArea      0.0
-BsmtQual        Fa
-BsmtExposure    Gd
-BsmtFinType1    LwQ
-GarageType      Basment
-GarageYrBlt     1900.0
-GarageFinish    Fin
+MSZoning        4       object          RL
+LotFrontage     486     float64         21.0
+Utilities       2       object          AllPub
+Exterior1st     1       object          Stone
+Exterior2nd     1       object          Stone
+MasVnrType      24      object          None
+MasVnrArea      23      float64         0.0
+BsmtQual        81      object          Fa
+BsmtCond        82      object          Fa
+BsmtExposure    82      object          Gd
+BsmtFinType1    79      object          LwQ
+BsmtFinSF1      1       float64         0.0
+BsmtFinType2    80      object          LwQ
+BsmtFinSF2      1       float64         0.0
+BsmtUnfSF       1       float64         0.0
+TotalBsmtSF     1       float64         0.0
+Electrical      1       object          FuseP
+BsmtFullBath    2       float64         0.0
+BsmtHalfBath    2       float64         0.0
+KitchenQual     1       object          Fa
+Functional      2       object          Sev
+GarageType      157     object          Basment
+GarageYrBlt     159     float64         2207.0
+GarageFinish    159     object          Fin
+GarageCars      1       float64         0.0
+GarageArea      1       float64         0.0
+GarageQual      159     object          Fa
+GarageCond      159     object          Fa
+SaleType        1       object          Oth
 """
 
 # Assign dummies to categorical data
