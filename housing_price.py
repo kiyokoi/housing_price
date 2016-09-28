@@ -26,6 +26,25 @@ for column in data.columns:
 drop_features = ['Alley', 'FireplaceQu', 'PoolQC', 'Fence', 'MiscFeature']
 data = data.drop(drop_features, axis=1)
 
+# Define categorical and numerical columns
+categorical = []
+numerical = []
+for column in x_all.columns:
+    if x_all[column].dtypes == 'object':
+        categorical.append(column)
+    else:
+        numerical.append(column)
+
+# Take log of data with skew > 0.1
+from scipy.stats import skew
+for column in numerical:
+    if skew(x_all[column]) > 0.1:
+        x_all[column] = np.log1p(x_all[column])
+
+y = np.log1p(y)
+
+print x_all.shape    # (2919, 75)
+
 # Missing value treatment
 # Explore missing values
 for column in data.columns:
