@@ -26,37 +26,6 @@ for column in data.columns:
 drop_features = ['Alley', 'FireplaceQu', 'PoolQC', 'Fence', 'MiscFeature']
 data = data.drop(drop_features, axis=1)
 
-# Create frequency table for categorical features
-# Drop features with unbalanced data (>75% of data in one category)
-object_cols = []
-for column in data.columns:
-    count_frac = data[column].value_counts(
-    ) / data[column].value_counts().sum()
-    for cat, frac in count_frac.iteritems():
-        if frac > 0.75:
-            object_cols.append(column)
-
-print object_cols
-"""
-['MSZoning', 'Street', 'LandContour', 'Utilities', 'LandSlope', 'Condition1',
-'Condition2', 'BldgType', 'RoofStyle', 'RoofMatl', 'ExterCond', 'BsmtCond',
-'BsmtFinType2', 'BsmtFinSF2', 'Heating', 'CentralAir', 'Electrical',
-'LowQualFinSF', 'BsmtHalfBath', 'KitchenAbvGr', 'Functional', 'GarageQual',
-'GarageCond', 'PavedDrive', 'EnclosedPorch', '3SsnPorch', 'ScreenPorch',
-'PoolArea', 'MiscVal', 'SaleType', 'SaleCondition']
-Drop them for now
-"""
-data = data.drop(['MSZoning', 'Street', 'LandContour', 'Utilities', 'LandSlope',
-                  'Condition1', 'Condition2', 'BldgType', 'RoofStyle', 'RoofMatl',
-                  'ExterCond', 'BsmtCond', 'BsmtFinType2', 'BsmtFinSF2', 'Heating',
-                  'CentralAir', 'Electrical', 'LowQualFinSF', 'BsmtHalfBath',
-                  'KitchenAbvGr', 'Functional', 'GarageQual', 'GarageCond',
-                  'PavedDrive', 'EnclosedPorch', '3SsnPorch', 'ScreenPorch',
-                  'PoolArea', 'MiscVal', 'SaleType', 'SaleCondition'],
-                 axis=1)
-
-print data.shape    # (1460, 44)
-
 # Missing value treatment
 # Explore missing values
 for column in data.columns:
