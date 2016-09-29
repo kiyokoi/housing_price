@@ -88,6 +88,20 @@ GarageCond      159     object          Fa
 SaleType        1       object          Oth
 """
 
+# Visualize numerical data
+import matplotlib.pyplot as plt
+
+fig = plt.figure(figsize=(12, 48))
+for i, column in enumerate(numerical):
+    charts = fig.add_subplot(24, 6, i + 1)
+    charts.set_xlabel(column)
+    charts.set_ylabel('Sale Price')
+    charts.set_xticklabels(column, rotation=70)
+    charts.hist(x_all[column])
+    locs, labels = plt.xticks()
+fig.tight_layout()
+fig.show()
+
 # Assign dummies to categorical data
 categorical = []
 numerical = []
